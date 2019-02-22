@@ -45,7 +45,7 @@ import com.google.api.server.spi.response.UnauthorizedException;
     issuers = {
         @ApiIssuer(
             name = "firebase",
-            issuer = "https://securetoken.google.com/YOUR-PROJECT-ID",
+            issuer = "https://securetoken.google.com/ocrpwc",
             jwksUri =
                 "https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system"
                     + ".gserviceaccount.com"
@@ -168,7 +168,7 @@ public class Echo {
       issuerAudiences = {
           @ApiIssuerAudience(
               name = "firebase",
-              audiences = {"YOUR-PROJECT-ID"}
+              audiences = {"ocrpwc"}
           )
       }
   )
