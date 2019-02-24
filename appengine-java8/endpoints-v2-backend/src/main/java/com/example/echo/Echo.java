@@ -16,6 +16,12 @@
 
 package com.example.echo;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import com.google.api.server.spi.auth.EspAuthenticator;
 import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.AnnotationBoolean;
@@ -57,6 +63,9 @@ import com.google.api.server.spi.response.UnauthorizedException;
 
 public class Echo {
 
+	@Autowired
+	@Qualifier("pointServices")
+	private com.example.echo.services.IPointServices pointService;
   /**
    * Echoes the received message back. If n is a non-negative integer, the message is copied that
    * many times in the returned message.
@@ -107,6 +116,24 @@ public class Echo {
     return doEcho(message, n);
   }
   // [END echo_api_key]
+
+  @ApiMethod(name = "add_point", path = "addpoint")
+  public void addPoint(com.example.echo.dto.PointDto pointDto, @Named("n") @Nullable Integer n) {
+	  pointService.savePoint(pointDto);
+  }
+
+  @ApiMethod(name = "add_point", path = "getpoints")
+  public List<com.example.echo.dto.PointDto> getPoints(com.example.echo.dto.RequestPointDto request, @Named("n") @Nullable Integer n) {
+	  if (request == null || request.getKey() == null || request.getLstId() == null || request.getLstId().isEmpty()) {
+			return new ArrayList<>();			
+		}
+		List<com.example.echo.dto.PointDto> lstPoint = pointService.getPoint(request.getLstId(), request.getKey());
+		if (lstPoint == null || lstPoint.isEmpty()) {
+			return new ArrayList<>();	
+		} else {			
+			return lstPoint;
+		}
+  }
 
   private Message doEcho(Message message, Integer n) {
     if (n != null && n >= 0) {
